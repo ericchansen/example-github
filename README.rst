@@ -37,8 +37,7 @@ example-github
     Example for GitHub.
 
 
-A longer description of your project goes here...
-
+I'm messing around with GitHub CI/CD.
 
 .. _pyscaffold-notes:
 
