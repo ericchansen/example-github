@@ -27,6 +27,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test secret 1
+        run: >-
+          echo ${{ secrets.TEST_SECRET }}
+      - name: Test secret 2
+        env:
+          TEST_SECRET: ${{ secrets.TEST_SECRET }}
+        run: >-
+          echo ${{ secrets.TEST_SECRET }}
+          echo $TEST_SECRET
+
+
   prepare:
     runs-on: ubuntu-latest
     outputs:
@@ -40,6 +54,8 @@ jobs:
       - name: Run static analysis and format checkers
         run: pipx run pre-commit run --all-files --show-diff-on-failure
       - name: Build package distribution files
+        env:
+          CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
         run: >-
           pipx run --python '${{ steps.setup-python.outputs.python-path }}'
           tox -e clean,build
@@ -60,8 +76,8 @@ jobs:
     strategy:
       matrix:
         python:
-        - "3.8"  # oldest Python supported by PSF
-        - "3.11"  # newest Python that is stable
+        - "3.8"
+        - "3.11"
         platform:
         - ubuntu-latest
         - macos-latest
